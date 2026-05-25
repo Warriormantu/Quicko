@@ -66,9 +66,10 @@ export const Badge = ({ children, variant = 'gold', className = '' }) => {
     gold: 'badge-gold',
     success: 'badge-success',
     danger: 'badge-danger',
+    warning: 'bg-yellow-500/20 text-yellow-400 badge',
     secondary: 'badge bg-brand-surface text-brand-secondary',
   };
-  return <span className={`badge ${variants[variant]} ${className}`}>{children}</span>;
+  return <span className={`badge ${variants[variant] || variants.secondary} ${className}`}>{children}</span>;
 };
 
 export const GlassCard = ({ children, className = '', hover = false, onClick }) => (

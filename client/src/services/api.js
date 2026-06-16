@@ -1,7 +1,13 @@
 import axios from 'axios';
 
+// In production (Vercel/Render), use the full backend URL.
+// In local dev, use '/api' so the Vite proxy handles it.
+const BASE_URL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api';
+
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: BASE_URL,
   timeout: 15000,
   headers: { 'Content-Type': 'application/json' },
 });

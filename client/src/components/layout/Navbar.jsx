@@ -56,7 +56,7 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop Nav Links */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center justify-center flex-1 gap-2">
               <Link to="/" className="btn-ghost text-sm">Home</Link>
               <Link to="/products" className="btn-ghost text-sm">Shop</Link>
               <div className="relative group">
@@ -76,7 +76,7 @@ export default function Navbar() {
             </nav>
 
             {/* Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               {/* Search */}
               <AnimatePresence>
                 {showSearch ? (

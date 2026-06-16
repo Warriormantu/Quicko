@@ -32,9 +32,18 @@ connectDB();
 
 const app = express();
 const server = http.createServer(app);
+
+// Build allowed origins list from env (comma-separated) plus localhost defaults
+const rawClientUrls = (process.env.CLIENT_URL || '').split(',').map(u => u.trim()).filter(Boolean);
+const ALLOWED_ORIGINS = [...new Set([
+  ...rawClientUrls,
+  'http://localhost:5173',
+  'http://localhost:5174',
+])];
+
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: ALLOWED_ORIGINS,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -51,11 +60,14 @@ app.use((req, res, next) => {
 // Security
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL || 'http://localhost:5173',
-    'http://localhost:5173',
-    'http://localhost:5174',
-  ],
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, Postman, mobile)
+    if (!origin) return callback(null, true);
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  },
   credentials: true,
 }));
 

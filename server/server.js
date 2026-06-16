@@ -33,13 +33,15 @@ connectDB();
 const app = express();
 const server = http.createServer(app);
 
-// Build allowed origins list from env (comma-separated) plus localhost defaults
+// Build allowed origins list from env (comma-separated) + hardcoded known origins
 const rawClientUrls = (process.env.CLIENT_URL || '').split(',').map(u => u.trim()).filter(Boolean);
 const ALLOWED_ORIGINS = [...new Set([
   ...rawClientUrls,
+  'https://quicko-nu.vercel.app',   // Vercel production frontend
   'http://localhost:5173',
   'http://localhost:5174',
 ])];
+console.log('✅ CORS allowed origins:', ALLOWED_ORIGINS);
 
 const io = new Server(server, {
   cors: {
@@ -61,12 +63,15 @@ app.use((req, res, next) => {
 app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (curl, Postman, mobile)
+    // Allow requests with no origin (curl, Postman, server-to-server)
     if (!origin) return callback(null, true);
     if (ALLOWED_ORIGINS.includes(origin)) {
       return callback(null, true);
     }
-    return callback(new Error(`CORS blocked for origin: ${origin}`));
+    // Return false (not an Error) so Express sends a proper 403 CORS block
+    // instead of a 500 Internal Server Error
+    console.warn(`🚫 CORS blocked for origin: ${origin}`);
+    return callback(null, false);
   },
   credentials: true,
 }));

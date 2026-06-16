@@ -49,13 +49,6 @@ export default function LoginPage() {
         </div>
 
         <div className="glass-card p-8">
-          {/* Demo credentials hint */}
-          <div className="bg-brand-gold/10 border border-brand-gold/20 rounded-xl p-3 mb-6 text-sm">
-            <p className="text-brand-gold font-medium mb-1">Demo Credentials</p>
-            <p className="text-brand-secondary">User: <code className="text-brand-gold">user@quicko.com</code> / <code className="text-brand-gold">user1234</code></p>
-            <p className="text-brand-secondary">Admin: <code className="text-brand-gold">admin@quicko.com</code> / <code className="text-brand-gold">admin123</code></p>
-          </div>
-
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label className="text-sm text-brand-secondary mb-2 block">Email</label>
